@@ -1,6 +1,6 @@
 export const SITE_CONFIG = {
-  name: "Família Moraes",
-  shortName: "Moraes",
+  name: "Moraes Family Money",
+  shortName: "Moraes Money",
   description:
     "Painel financeiro da Família Moraes — clareza total sobre receitas, despesas, investimentos e patrimônio.",
 };
