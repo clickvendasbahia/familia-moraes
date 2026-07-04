@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --radius: 0.875rem;
+
+  --background: #f7f7f9;
+  --foreground: #14161a;
+
+  --surface: #ffffff;
+  --surface-muted: #f1f1f4;
+  --border: #e6e6ea;
+
+  --primary: #6d28d9;
+  --primary-foreground: #ffffff;
+
+  --income: #12946f;
+  --income-soft: #e3f7ef;
+
+  --expense: #e0483e;
+  --expense-soft: #fceeed;
+
+  --investment: #1e6fd9;
+  --investment-soft: #e8f1fd;
+
+  --warning: #d99a1e;
+  --warning-soft: #fbf1de;
+
+  --muted-foreground: #6b6f7b;
+}
+
+.dark {
+  --background: #0d0e12;
+  --foreground: #f2f2f4;
+
+  --surface: #16171d;
+  --surface-muted: #1c1d24;
+  --border: #2a2b33;
+
+  --primary: #a78bfa;
+  --primary-foreground: #14161a;
+
+  --income: #34d399;
+  --income-soft: #123328;
+
+  --expense: #f87171;
+  --expense-soft: #331616;
+
+  --investment: #60a5fa;
+  --investment-soft: #142236;
+
+  --warning: #fbbf24;
+  --warning-soft: #332a10;
+
+  --muted-foreground: #9497a3;
+}
+
+/* Cor de destaque por usuário (accent color). "roxo" é o padrão, já
+   coberto pelas variáveis acima — os demais sobrescrevem --primary. */
+[data-accent-color="preto_rosa"] {
+  --primary: #db2777;
+  --primary-foreground: #ffffff;
+}
+.dark[data-accent-color="preto_rosa"] {
+  --primary: #f472b6;
+  --primary-foreground: #1a1023;
+}
+
+[data-accent-color="azul"] {
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+}
+.dark[data-accent-color="azul"] {
+  --primary: #60a5fa;
+  --primary-foreground: #0b1220;
+}
+
+[data-accent-color="verde"] {
+  --primary: #059669;
+  --primary-foreground: #ffffff;
+}
+.dark[data-accent-color="verde"] {
+  --primary: #34d399;
+  --primary-foreground: #052e21;
+}
+
+[data-accent-color="laranja"] {
+  --primary: #ea580c;
+  --primary-foreground: #ffffff;
+}
+.dark[data-accent-color="laranja"] {
+  --primary: #fb923c;
+  --primary-foreground: #2a1205;
+}
+
+[data-accent-color="grafite"] {
+  --primary: #334155;
+  --primary-foreground: #ffffff;
+}
+.dark[data-accent-color="grafite"] {
+  --primary: #94a3b8;
+  --primary-foreground: #0f172a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-income: var(--income);
+  --color-income-soft: var(--income-soft);
+
+  --color-expense: var(--expense);
+  --color-expense-soft: var(--expense-soft);
+
+  --color-investment: var(--investment);
+  --color-investment-soft: var(--investment-soft);
+
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+
+  --color-muted-foreground: var(--muted-foreground);
+
+  --radius-card: var(--radius);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+* {
+  border-color: var(--color-border);
+}
