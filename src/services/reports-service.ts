@@ -1,7 +1,8 @@
 import { startOfMonth, endOfMonth, startOfYear, endOfYear, subMonths, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getTransactionsBetween } from "@/repositories/transactions-repository";
-import { capitalizeFirst } from "@/lib/utils";
+import { capitalizeFirst, getNowInSaoPaulo } from "@/lib/utils";
+import { getCurrentBrPeriod } from "@/lib/period";
 import { PERSON_OR_BOTH_LABELS, type PersonOrBoth } from "@/types/domain";
 
 function toDateStr(d: Date): string {
@@ -87,7 +88,9 @@ function summarize(rows: ReportTransactionRow[]) {
   };
 }
 
-export async function getMonthlyReport(referenceDate: Date = new Date()): Promise<ReportData> {
+export async function getMonthlyReport(
+  referenceDate: Date = getNowInSaoPaulo(),
+): Promise<ReportData> {
   const monthStart = toDateStr(startOfMonth(referenceDate));
   const monthEnd = toDateStr(endOfMonth(referenceDate));
   const prevMonth = subMonths(referenceDate, 1);
@@ -117,7 +120,9 @@ export async function getMonthlyReport(referenceDate: Date = new Date()): Promis
   };
 }
 
-export async function getAnnualReport(year: number = new Date().getFullYear()): Promise<ReportData> {
+export async function getAnnualReport(
+  year: number = getCurrentBrPeriod().year,
+): Promise<ReportData> {
   const yearStart = toDateStr(startOfYear(new Date(year, 0, 1)));
   const yearEnd = toDateStr(endOfYear(new Date(year, 0, 1)));
 

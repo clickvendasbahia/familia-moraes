@@ -8,6 +8,7 @@ import {
   getTransactionById,
   type TransactionInput,
 } from "@/repositories/transactions-repository";
+import { getCategoryById } from "@/repositories/categories-repository";
 import {
   transactionSchema,
   importTransactionSchema,
@@ -16,6 +17,17 @@ import {
 } from "@/lib/validations/transaction";
 import { quickExpenseSchema } from "@/lib/validations/quick-expense";
 import type { PersonOrBoth } from "@/types/domain";
+
+async function assertSubcategoryRequirement(
+  categoryId: string | null,
+  subcategoryId: string | null,
+) {
+  if (!categoryId) return;
+  const category = await getCategoryById(categoryId);
+  if (category?.subcategory_required && !subcategoryId) {
+    throw new Error("Selecione a subcategoria para essa categoria.");
+  }
+}
 
 function toInsertPayload(input: TransactionFormInput): TransactionInput {
   return {
@@ -44,6 +56,10 @@ function revalidateAfterChange() {
 
 export async function createTransactionAction(rawInput: TransactionFormInput) {
   const input = transactionSchema.parse(rawInput);
+  await assertSubcategoryRequirement(
+    input.categoryId || null,
+    input.subcategoryId || null,
+  );
   await createTransaction(toInsertPayload(input));
   revalidateAfterChange();
 }
@@ -53,6 +69,10 @@ export async function updateTransactionAction(
   rawInput: TransactionFormInput,
 ) {
   const input = transactionSchema.parse(rawInput);
+  await assertSubcategoryRequirement(
+    input.categoryId || null,
+    input.subcategoryId || null,
+  );
   await updateTransaction(id, toInsertPayload(input));
   revalidateAfterChange();
 }

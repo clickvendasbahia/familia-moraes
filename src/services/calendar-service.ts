@@ -2,7 +2,7 @@ import { startOfMonth, endOfMonth, format, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getTransactionsBetween } from "@/repositories/transactions-repository";
 import { getActiveRecurringBills } from "@/repositories/recurring-bills-repository";
-import { capitalizeFirst } from "@/lib/utils";
+import { capitalizeFirst, getNowInSaoPaulo } from "@/lib/utils";
 
 function toDateStr(d: Date): string {
   return format(d, "yyyy-MM-dd");
@@ -23,7 +23,7 @@ export type CalendarData = {
 };
 
 export async function getCalendarData(
-  referenceDate: Date = new Date(),
+  referenceDate: Date = getNowInSaoPaulo(),
 ): Promise<CalendarData> {
   const monthStart = startOfMonth(referenceDate);
   const monthEnd = endOfMonth(referenceDate);

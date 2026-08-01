@@ -5,7 +5,7 @@ export async function getActiveRecurringBills() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("recurring_bills")
-    .select("id, name, amount, person, day_of_month")
+    .select("id, name, amount, person, day_of_month, start_date, end_date")
     .eq("active", true);
   if (error) throw error;
   return data;

@@ -18,3 +18,16 @@ export async function getCategoriesWithSubcategories(): Promise<
   if (error) throw error;
   return data as CategoryWithSubcategories[];
 }
+
+export async function getCategoryById(
+  id: string,
+): Promise<Database["public"]["Tables"]["categories"]["Row"] | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}

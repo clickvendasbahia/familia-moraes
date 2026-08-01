@@ -76,6 +76,7 @@ export function TransactionForm({
 
   const type = form.watch("type");
   const categoryId = form.watch("categoryId");
+  const subcategoryId = form.watch("subcategoryId");
   const investmentIdRegister = form.register("investmentId");
 
   const filteredCategories = categories.filter((c) => {
@@ -96,7 +97,20 @@ export function TransactionForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
+  useEffect(() => {
+    if (subcategoryId) form.clearErrors("subcategoryId");
+    // Só precisa reagir à escolha de uma subcategoria válida.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subcategoryId]);
+
   async function handleSubmit(values: TransactionFormInput) {
+    if (selectedCategory?.subcategory_required && !values.subcategoryId) {
+      form.setError("subcategoryId", {
+        message: "Selecione a subcategoria",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
       let attachmentUrl = values.attachmentUrl;
@@ -218,19 +232,29 @@ export function TransactionForm({
               )}
             </div>
             <div>
-              <Label htmlFor="subcategoryId">Subcategoria</Label>
+              <Label htmlFor="subcategoryId">
+                Subcategoria
+                {selectedCategory?.subcategory_required && " *"}
+              </Label>
               <Select
                 id="subcategoryId"
                 disabled={!selectedCategory?.subcategories.length}
                 {...form.register("subcategoryId")}
               >
-                <option value="">Nenhuma</option>
+                <option value="">
+                  {selectedCategory?.subcategory_required ? "Selecione" : "Nenhuma"}
+                </option>
                 {selectedCategory?.subcategories.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
                   </option>
                 ))}
               </Select>
+              {form.formState.errors.subcategoryId && (
+                <p className="mt-1 text-xs text-expense">
+                  {form.formState.errors.subcategoryId.message}
+                </p>
+              )}
             </div>
           </div>
         )

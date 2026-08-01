@@ -1,14 +1,14 @@
 import { startOfMonth, endOfMonth, subMonths, format } from "date-fns";
 import { getTransactionsBetween } from "@/repositories/transactions-repository";
 import { getBudgetForMonth } from "@/repositories/budgets-repository";
-import { formatCurrency, formatPercent } from "@/lib/utils";
+import { formatCurrency, formatPercent, getNowInSaoPaulo } from "@/lib/utils";
 
 function toDateStr(d: Date): string {
   return format(d, "yyyy-MM-dd");
 }
 
 export async function getDashboardInsights(
-  referenceDate: Date = new Date(),
+  referenceDate: Date = getNowInSaoPaulo(),
 ): Promise<string[]> {
   const monthStart = toDateStr(startOfMonth(referenceDate));
   const monthEnd = toDateStr(endOfMonth(referenceDate));

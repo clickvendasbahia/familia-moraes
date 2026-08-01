@@ -5,6 +5,7 @@ export type DefaultCategory = {
   group: CategoryGroup;
   icon: string;
   subcategories?: string[];
+  subcategoryRequired?: boolean;
 };
 
 /**
@@ -20,6 +21,13 @@ export const DEFAULT_CATEGORIES: DefaultCategory[] = [
   { name: "Comissões", group: "receita", icon: "Percent" },
   { name: "13º", group: "receita", icon: "Gift" },
   { name: "Outras receitas", group: "receita", icon: "PlusCircle" },
+  {
+    name: "Ganhos",
+    group: "receita",
+    icon: "Banknote",
+    subcategoryRequired: true,
+    subcategories: ["Zyoner", "Salvador Ingressos", "Outros"],
+  },
 
   // Despesas Fixas
   { name: "Aluguel", group: "despesa_fixa", icon: "Home" },
@@ -35,7 +43,22 @@ export const DEFAULT_CATEGORIES: DefaultCategory[] = [
   { name: "Escola", group: "despesa_fixa", icon: "GraduationCap" },
 
   // Despesas Variáveis
-  { name: "Mercado", group: "despesa_variavel", icon: "ShoppingCart" },
+  {
+    name: "Mercado",
+    group: "despesa_variavel",
+    icon: "ShoppingCart",
+    subcategoryRequired: true,
+    subcategories: [
+      "Compra geral",
+      "Hortifruti",
+      "Açougue",
+      "Frutas",
+      "Bebidas",
+      "Produtos de limpeza",
+      "Higiene pessoal",
+      "Outros",
+    ],
+  },
   { name: "Padaria", group: "despesa_variavel", icon: "Croissant" },
   { name: "Farmácia", group: "despesa_variavel", icon: "Pill" },
   { name: "Combustível", group: "despesa_variavel", icon: "Fuel" },
@@ -48,6 +71,56 @@ export const DEFAULT_CATEGORIES: DefaultCategory[] = [
   { name: "Pets", group: "despesa_variavel", icon: "PawPrint" },
   { name: "Casa", group: "despesa_variavel", icon: "Sofa" },
   { name: "Manutenção", group: "despesa_variavel", icon: "Wrench" },
+  {
+    name: "MJ",
+    group: "despesa_variavel",
+    icon: "Cat",
+    subcategoryRequired: true,
+    subcategories: ["Compra", "Acessórios", "Delivery", "Outros"],
+  },
+  {
+    name: "Beleza",
+    group: "despesa_variavel",
+    icon: "Sparkles",
+    subcategoryRequired: true,
+    subcategories: [
+      "Barbeiro",
+      "Cabelo",
+      "Produtos de beleza",
+      "Higiene pessoal",
+      "Estética",
+      "Outros",
+    ],
+  },
+  {
+    name: "Ferramentas",
+    group: "despesa_variavel",
+    icon: "Wrench",
+    subcategoryRequired: true,
+    subcategories: [
+      "Ferramentas de trabalho",
+      "Equipamentos",
+      "Manutenção",
+      "Materiais",
+      "Softwares e assinaturas",
+      "Outros",
+    ],
+  },
+  {
+    name: "Shows e Festas",
+    group: "despesa_variavel",
+    icon: "PartyPopper",
+    subcategoryRequired: true,
+    subcategories: [
+      "Ingressos",
+      "Festas",
+      "Bebidas e consumo",
+      "Transporte",
+      "Hospedagem",
+      "Alimentação",
+      "Outros",
+    ],
+  },
 
   // Investimentos
   {

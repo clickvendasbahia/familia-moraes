@@ -7,6 +7,10 @@ export type TransactionWithCategory =
       Database["public"]["Tables"]["categories"]["Row"],
       "name" | "group" | "icon"
     > | null;
+    subcategories: Pick<
+      Database["public"]["Tables"]["subcategories"]["Row"],
+      "name"
+    > | null;
   };
 
 export type TransactionLite = Pick<
@@ -26,7 +30,7 @@ export async function getTransactionsBetween(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("transactions")
-    .select("*, categories(name, group, icon)")
+    .select("*, categories(name, group, icon), subcategories(name)")
     .gte("date", startDate)
     .lte("date", endDate)
     .order("date", { ascending: true });
@@ -40,7 +44,7 @@ export async function getRecentTransactions(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("transactions")
-    .select("*, categories(name, group, icon)")
+    .select("*, categories(name, group, icon), subcategories(name)")
     .order("date", { ascending: false })
     .order("created_at", { ascending: false })
     .limit(limit);

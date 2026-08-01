@@ -37,13 +37,46 @@ export function formatDate(date: string | Date): string {
 }
 
 /**
- * Data de hoje no formato "YYYY-MM-DD" usando o fuso horário local do
- * navegador. Evita o mesmo problema de `toISOString()` (que converte para
- * UTC e pode "pular" para o dia seguinte perto da meia-noite em fusos como
- * o do Brasil).
+ * "Agora" no fuso horário America/Sao_Paulo, representado como um `Date`
+ * cujos getters locais (getFullYear/getMonth/getDate/...) já refletem o
+ * horário de Brasília — independente do fuso horário real do processo que
+ * está rodando (em produção na Vercel, os servidores rodam em UTC). Usar
+ * `new Date()` puro para decidir "o mês atual" é o bug clássico: perto da
+ * meia-noite em Brasília (21h-23h59, que já é 00h-02h59 UTC do dia
+ * seguinte), o servidor acha que já é outro dia/mês.
+ */
+export function getNowInSaoPaulo(): Date {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(new Date());
+
+  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value);
+
+  return new Date(
+    get("year"),
+    get("month") - 1,
+    get("day"),
+    get("hour"),
+    get("minute"),
+    get("second"),
+  );
+}
+
+/**
+ * Data de hoje no formato "YYYY-MM-DD" no fuso horário do Brasil
+ * (America/Sao_Paulo), não no fuso do servidor. Evita o problema de
+ * `toISOString()`/`new Date()` local do processo, que em produção roda em
+ * UTC e pode "pular" para o dia seguinte perto da meia-noite em Brasília.
  */
 export function getTodayISODate(): string {
-  const now = new Date();
+  const now = getNowInSaoPaulo();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");

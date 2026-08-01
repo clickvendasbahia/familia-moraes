@@ -14,7 +14,7 @@ import { getActiveAccounts } from "@/repositories/accounts-repository";
 import { getActiveRecurringBills } from "@/repositories/recurring-bills-repository";
 import { getInvestmentsOverview } from "@/services/investments-service";
 import { getGoalsOverview, type GoalWithProgress } from "@/services/goals-service";
-import { capitalizeFirst, parseISODate } from "@/lib/utils";
+import { capitalizeFirst, getNowInSaoPaulo, parseISODate } from "@/lib/utils";
 
 const HISTORY_MONTHS_FOR_AVERAGE = 3;
 const MAX_NET_WORTH_HISTORY_MONTHS = 36;
@@ -37,7 +37,7 @@ export type FinancialPlanningData = {
 };
 
 export async function getFinancialPlanningData(
-  referenceDate: Date = new Date(),
+  referenceDate: Date = getNowInSaoPaulo(),
 ): Promise<FinancialPlanningData> {
   const monthStart = toDateStr(startOfMonth(referenceDate));
   const monthEnd = toDateStr(endOfMonth(referenceDate));

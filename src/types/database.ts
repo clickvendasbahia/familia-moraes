@@ -75,6 +75,7 @@ export type Database = {
           icon: string | null;
           is_default: boolean;
           archived: boolean;
+          subcategory_required: boolean;
           created_at: string;
         };
         Insert: {
@@ -84,6 +85,7 @@ export type Database = {
           icon?: string | null;
           is_default?: boolean;
           archived?: boolean;
+          subcategory_required?: boolean;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["categories"]["Insert"]>;
