@@ -83,28 +83,32 @@ export async function deleteTransactionAction(id: string) {
 }
 
 /**
- * Registro de gasto rápido: só valor, categoria e pessoa (spec explícita:
- * "nada mais"). Sem conta/forma de pagamento — a descrição é derivada do
- * nome da categoria.
+ * Registro de gasto rápido: valor, categoria, subcategoria (quando a
+ * categoria exigir) e pessoa. Sem conta/forma de pagamento — a descrição é
+ * derivada do nome da categoria.
  */
 export async function createQuickExpenseAction(input: {
   amount: number;
   categoryId: string;
   categoryName: string;
+  subcategoryId?: string;
   person: PersonOrBoth;
   date: string;
 }) {
   const parsed = quickExpenseSchema.parse({
     amount: input.amount,
     categoryId: input.categoryId,
+    subcategoryId: input.subcategoryId ?? "",
     person: input.person,
   });
+  await assertSubcategoryRequirement(parsed.categoryId, parsed.subcategoryId || null);
   await createTransaction({
     type: "despesa",
     person: parsed.person,
     amount: parsed.amount,
     description: input.categoryName,
     category_id: parsed.categoryId,
+    subcategory_id: parsed.subcategoryId || null,
     date: input.date,
   });
   revalidateAfterChange();

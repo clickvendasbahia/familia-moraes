@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Zap } from "lucide-react";
@@ -40,22 +40,43 @@ export function QuickExpenseButton({
 
   const form = useForm<QuickExpenseInput>({
     resolver: zodResolver(quickExpenseSchema),
-    defaultValues: { amount: 0, categoryId: "", person: "ramon" },
+    defaultValues: { amount: 0, categoryId: "", subcategoryId: "", person: "ramon" },
   });
 
+  const categoryId = form.watch("categoryId");
+  const subcategoryId = form.watch("subcategoryId");
+  const selectedCategory = expenseCategories.find((c) => c.id === categoryId);
+
+  useEffect(() => {
+    form.setValue("subcategoryId", "");
+    // Só precisa reagir à troca de categoria.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryId]);
+
+  useEffect(() => {
+    if (subcategoryId) form.clearErrors("subcategoryId");
+    // Só precisa reagir à escolha de uma subcategoria válida.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subcategoryId]);
+
   async function onSubmit(values: QuickExpenseInput) {
-    const category = expenseCategories.find((c) => c.id === values.categoryId);
+    if (selectedCategory?.subcategory_required && !values.subcategoryId) {
+      form.setError("subcategoryId", { message: "Selecione a subcategoria" });
+      return;
+    }
+
     setSubmitting(true);
     try {
       await createQuickExpenseAction({
         amount: values.amount,
         categoryId: values.categoryId,
-        categoryName: category?.name ?? "Gasto rápido",
+        categoryName: selectedCategory?.name ?? "Gasto rápido",
+        subcategoryId: values.subcategoryId || undefined,
         person: values.person,
         date: getTodayISODate(),
       });
       toast.success("Gasto registrado");
-      form.reset({ amount: 0, categoryId: "", person: values.person });
+      form.reset({ amount: 0, categoryId: "", subcategoryId: "", person: values.person });
       setOpen(false);
     } catch {
       toast.error("Não foi possível registrar o gasto");
@@ -115,6 +136,29 @@ export function QuickExpenseButton({
               </p>
             )}
           </div>
+          {!!selectedCategory?.subcategories.length && (
+            <div>
+              <Label htmlFor="quick-subcategory">
+                Subcategoria
+                {selectedCategory?.subcategory_required && " *"}
+              </Label>
+              <Select id="quick-subcategory" {...form.register("subcategoryId")}>
+                <option value="">
+                  {selectedCategory?.subcategory_required ? "Selecione" : "Nenhuma"}
+                </option>
+                {selectedCategory?.subcategories.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </Select>
+              {form.formState.errors.subcategoryId && (
+                <p className="mt-1 text-xs text-expense">
+                  {form.formState.errors.subcategoryId.message}
+                </p>
+              )}
+            </div>
+          )}
           <div>
             <Label htmlFor="quick-person">Pessoa</Label>
             <Select id="quick-person" {...form.register("person")}>
